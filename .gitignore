@@ -1,0 +1,9 @@
+fast-api.txt
+fast-venv
+__pycache__
+*.log
+*.pot
+*.pyc
+__pycache__/
+.env
+.pytest_cache
