@@ -1,16 +1,8 @@
 from fastapi import HTTPException, status
 
-from passlib.context import CryptContext
-
 from app.v1.model.user_model import User as UserModel
 from app.v1.schema import user_schema
-
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-
-
-def get_password_hash(password): 
-    return pwd_context.hash(password)
+from app.v1.service.auth_service import get_password_hash
 
 
 def create_user(user: user_schema.UserRegister):
@@ -22,9 +14,11 @@ def create_user(user: user_schema.UserRegister):
         if get_user.username == user.username:
             message = "Username already registered"
             
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail=message)
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail=message)
         
-    db_user = UserModel(username=user.username, email=user.email, password=get_password_hash(user.password))
+    db_user = UserModel(username=user.username, 
+                        email=user.email, 
+                        password=get_password_hash(user.password))
 
     db_user.save()
 
